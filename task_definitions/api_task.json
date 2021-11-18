@@ -1,0 +1,80 @@
+[
+  {
+    "name": "api",
+    "image": "132180986458.dkr.ecr.ap-northeast-1.amazonaws.com/api:latest",
+    "essential": true,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "ap-northeast-1",
+        "awslogs-stream-prefix": "api",
+        "awslogs-group": "/ecs/api"
+      }
+    },
+    "secrets": [
+      {
+        "name": "SECRET_KEY",
+        "valueFrom": "/api/secret_key"
+      },
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "valueFrom": "/api/aws_access_key_id"
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "valueFrom": "/api/aws_secret_access_key"
+      },
+      {
+        "name": "SQLALCHEMY_DATABASE_URI",
+        "valueFrom": "/api/sqlalchemy_database_uri"
+      },
+      {
+        "name": "MAILGUN_API_KEY",
+        "valueFrom": "/api/mailgun_api_key"
+      },
+      {
+        "name": "MAILGUN_DOMAIN_NAME",
+        "valueFrom": "/api/mailgun_domain_name"
+      },
+      {
+        "name": "FRONT_URL",
+        "valueFrom": "/api/front_url"
+      },
+      {
+        "name": "MAINTENANCE",
+        "valueFrom": "/api/maintenance"
+      }
+    ],
+    "mountPoints": [
+      {
+        "sourceVolume": "socket",
+        "containerPath": "/tmp"
+      }
+    ]
+  },
+  {
+    "name": "nginx",
+    "image": "132180986458.dkr.ecr.ap-northeast-1.amazonaws.com/nginx:latest",
+    "essential": true,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "ap-northeast-1",
+        "awslogs-stream-prefix": "web",
+        "awslogs-group": "/ecs/api"
+      }
+    },
+    "mountPoints": [
+      {
+        "sourceVolume": "socket",
+        "containerPath": "/tmp"
+      }
+    ],
+    "portMappings": [
+      {
+        "protocol": "tcp",
+        "containerPort": 80
+      }
+    ]
+  }
+]

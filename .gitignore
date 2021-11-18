@@ -1,1 +1,8 @@
 .terraform
+.envrc
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+.tfvars
+crash.log
+task_execute.sh

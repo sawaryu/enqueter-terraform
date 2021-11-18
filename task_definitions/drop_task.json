@@ -1,0 +1,25 @@
+[
+  {
+    "name": "api",
+    "image": "132180986458.dkr.ecr.ap-northeast-1.amazonaws.com/api:latest",
+    "essential": true,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "ap-northeast-1",
+        "awslogs-stream-prefix": "drop",
+        "awslogs-group": "/ecs/event"
+      }
+    },
+    "secrets": [
+      {
+        "name": "SQLALCHEMY_DATABASE_URI",
+        "valueFrom": "/api/sqlalchemy_database_uri"
+      }
+    ],
+    "command": [
+      "sh",
+      "shell/drop.sh"
+    ]
+  }
+]

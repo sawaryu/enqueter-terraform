@@ -1,24 +1,25 @@
 [
   {
-    "name": "alpine",
-    "image": "alpine:latest",
+    "name": "api",
+    "image": "132180986458.dkr.ecr.ap-northeast-1.amazonaws.com/api:latest",
     "essential": true,
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
         "awslogs-region": "ap-northeast-1",
         "awslogs-stream-prefix": "batch",
-        "awslogs-group": "/ecs-scheduled-tasks/example"
+        "awslogs-group": "/ecs/event"
       }
     },
     "secrets": [
       {
-        "name": "DB_USERNAME",
-        "valueFrom": "/db/username"
+        "name": "SQLALCHEMY_DATABASE_URI",
+        "valueFrom": "/api/sqlalchemy_database_uri"
       }
     ],
     "command": [
-      "/usr/bin/env"
+      "sh",
+      "shell/batch.sh"
     ]
   }
 ]
