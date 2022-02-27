@@ -358,3 +358,20 @@ resource "aws_vpc_endpoint" "watch_logs" {
     Name = "watch-logs"
   }
 }
+
+resource "aws_vpc_endpoint" "s3_gateway" {
+  vpc_id            = aws_vpc.example.id
+  service_name      = "com.amazonaws.ap-northeast-1.s3"
+  vpc_endpoint_type = "Gateway"
+
+  tags = {
+    Name = "s3-gateway"
+  }
+}
+
+resource "aws_vpc_endpoint_route_table_association" "s3_gateway" {
+  vpc_endpoint_id = aws_vpc_endpoint.s3_gateway.id
+  route_table_id  = aws_route_table.private_0.id
+}
+
+
