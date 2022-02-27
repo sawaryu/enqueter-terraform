@@ -306,8 +306,9 @@ resource "aws_acm_certificate_validation" "example" {
 }
 
 #----------------
-# Private Link
+# VPC ENDPOINT
 #----------------
+
 module "private_link_sg" {
   source      = "./security_group"
   name        = "private-link-sg"
@@ -341,5 +342,19 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 
   tags = {
     Name = "ecr-dkr"
+  }
+}
+
+resource "aws_vpc_endpoint" "watch_logs" {
+  vpc_id              = aws_vpc.example.id
+  subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
+  service_name        = "com.amazonaws.ap-northeast-1.logs"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+
+  security_group_ids = [module.private_link_sg.security_group_id]
+
+  tags = {
+    Name = "watch-logs"
   }
 }
