@@ -39,10 +39,6 @@
       {
         "name": "FRONT_URL",
         "valueFrom": "/api/front_url"
-      },
-      {
-        "name": "MAINTENANCE",
-        "valueFrom": "/api/maintenance"
       }
     ],
     "mountPoints": [
