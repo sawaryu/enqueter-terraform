@@ -5,10 +5,10 @@ resource "aws_security_group" "default" {
 
 resource "aws_security_group_rule" "ingress" {
   type              = "ingress"
-  from_port         = var.port #http通信を許可(リクエスト)
-  to_port           = var.port #出口も許可（レスポンス）
+  from_port         = var.port # Basically,permit only http
+  to_port           = var.port #
   protocol          = "tcp"
-  cidr_blocks       = var.cidr_blocks #全てのipから
+  cidr_blocks       = var.cidr_blocks
   security_group_id = aws_security_group.default.id
 }
 
