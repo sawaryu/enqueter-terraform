@@ -1,6 +1,5 @@
 # Enqueter Terraform
 
-## Overview
 Infrastructure by terraform
 
 ## AWS CLI setup
@@ -25,24 +24,6 @@ Default output format [None]: *("json" is better.)
 $ aws configure list
 # Get account ID
 $ aws sts get-caller-identity --query Account --output text
-```
-
-## Container Definition
-
-```
-[
-  {
-    "name": "example", # optional
-    "image": "nginx:latest", # image
-    "essential": true, # must be needed for running task
-    "portMappings": [ # lirerarly
-      {
-        "protocol": "tcp",
-        "containerPort": 80
-      }
-    ]
-  }
-]
 ```
 
 ## AWS CLI operation
@@ -88,9 +69,6 @@ $ aws rds modify-db-instance --db-instance-identifier "example" --master-user-pa
 
 1. VPC default root is out of terraform operation.
 2. Route53 domains life time is one year.
-* SSL導入時の`terraform apply`エラーについて
-DNS検証が完了する前にhttpsのリスナーが起動してしまい資格がないものとしてエラーと思われる。
-
 3. Before Destroy RDS
 * `deletion_protection` to `false`
 * `skip_final_snapshot` to `true`

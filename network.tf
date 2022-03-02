@@ -167,10 +167,6 @@ resource "aws_lb" "example" {
   ]
 }
 
-# output "alb_dns_name" {
-#   value = aws_lb.example.dns_name
-# }
-
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.example.arn
   port              = "80"
@@ -270,10 +266,6 @@ resource "aws_route53_record" "example" {
     evaluate_target_health = true
   }
 }
-
-# output "domain_name" {
-#   value = aws_route53_record.example.name
-# }
 
 resource "aws_acm_certificate" "example" {
   domain_name               = aws_route53_record.example.name
