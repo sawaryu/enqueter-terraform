@@ -68,7 +68,7 @@ resource "aws_ecs_service" "api" {
   name                              = "api"                           # Assign the name of cluster
   cluster                           = aws_ecs_cluster.api.arn         # Assign the arn of cluster
   task_definition                   = aws_ecs_task_definition.api.arn # Assign the arn of task definition
-  desired_count                     = 0                               # TODO (If you want to stop service temporaly, set "0")
+  desired_count                     = 2                               # TODO (If you want to stop service temporaly, set "0")
   launch_type                       = "FARGATE"
   platform_version                  = "1.4.0" # Should assign latest version. (* Don't use 'latest')
   health_check_grace_period_seconds = 60      # Recommended to set little longer time.
