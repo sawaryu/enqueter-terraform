@@ -251,8 +251,10 @@ resource "aws_lb_listener_rule" "nginx" {
 #----------------
 # Route53, ACM(SSL certificate)
 #----------------
+variable "api_domain_name" {}
+
 data "aws_route53_zone" "example" {
-  name = "tubuanpanman.com"
+  name = var.api_domain_name
 }
 
 resource "aws_route53_record" "example" {

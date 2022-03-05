@@ -3,6 +3,6 @@
 .terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
-.tfvars
+*.tfvars
 crash.log
 task_execute.sh
