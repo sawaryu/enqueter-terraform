@@ -11,6 +11,6 @@ module "acm" {
 module "spa" {
   source   = "./spa"
   domain   = var.front_domain_name
-  app_name = "ichimonittou-front"
+  app_name = "enqueter-front"
   acm_id   = module.acm.acm_id
 }
