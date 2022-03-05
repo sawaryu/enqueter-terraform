@@ -351,6 +351,20 @@ resource "aws_vpc_endpoint" "watch_logs" {
   }
 }
 
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id              = aws_vpc.example.id
+  subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
+  service_name        = "com.amazonaws.ap-northeast-1.ssm"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+
+  security_group_ids = [module.private_link_sg.security_group_id]
+
+  tags = {
+    Name = "ssm"
+  }
+}
+
 resource "aws_vpc_endpoint" "s3_gateway" {
   vpc_id            = aws_vpc.example.id
   service_name      = "com.amazonaws.ap-northeast-1.s3"

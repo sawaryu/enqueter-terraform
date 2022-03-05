@@ -89,3 +89,9 @@ In case of "terraform destroy", needing confirm setting.
 3. Delete ALB
 4. Delete Cloudwatch Event target
 5. Change Desired count of ECS service '0' 
+
+```
+ResourceInitializationError: unable to pull secrets or registry auth: execution resource retrieval failed: unable to retrieve secrets from ssm: service call has been retried 5 time(s): RequestCanceled: request context canceled caused by: context deadli...
+
+CannotPullContainerError: ref pull has been retried 5 time(s): failed to copy: httpReadSeeker: failed open: failed to do request: Get https://prod-ap-northeast-1-starport-layer-bucket.s3.ap-northeast-1.amazonaws.com/88749b-132180986458-7abe730d-4157-9a...
+```
