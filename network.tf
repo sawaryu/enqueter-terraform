@@ -69,54 +69,62 @@ resource "aws_subnet" "private_1" {
 #----------------
 # NAT
 #----------------
-# resource "aws_route_table_association" "private_0" {
-#   subnet_id      = aws_subnet.private_0.id
-#   route_table_id = aws_route_table.private_0.id
-# }
-# resource "aws_route_table_association" "private_1" {
-#   subnet_id      = aws_subnet.private_1.id
-#   route_table_id = aws_route_table.private_1.id
-# }
+resource "aws_route_table" "private_0" {
+  vpc_id = aws_vpc.example.id
+}
 
-# resource "aws_route" "private_0" {
-#   route_table_id         = aws_route_table.private_0.id
-#   nat_gateway_id         = aws_nat_gateway.nat_gateway_0.id
-#   destination_cidr_block = "0.0.0.0/0"
-# }
-# resource "aws_route" "private_1" {
-#   route_table_id         = aws_route_table.private_1.id
-#   nat_gateway_id         = aws_nat_gateway.nat_gateway_1.id
-#   destination_cidr_block = "0.0.0.0/0"
-# }
+resource "aws_route_table" "private_1" {
+  vpc_id = aws_vpc.example.id
+}
 
-# resource "aws_eip" "nat_gateway_0" {
-#   vpc = true
-#   depends_on = [
-#     aws_internet_gateway.example
-#   ]
-# }
-# resource "aws_eip" "nat_gateway_1" {
-#   vpc = true
-#   depends_on = [
-#     aws_internet_gateway.example
-#   ]
-# }
+resource "aws_route_table_association" "private_0" {
+  subnet_id      = aws_subnet.private_0.id
+  route_table_id = aws_route_table.private_0.id
+}
+resource "aws_route_table_association" "private_1" {
+  subnet_id      = aws_subnet.private_1.id
+  route_table_id = aws_route_table.private_1.id
+}
 
-# resource "aws_nat_gateway" "nat_gateway_0" {
-#   allocation_id = aws_eip.nat_gateway_0.id
-#   # Attention to setting public subnet in below
-#   subnet_id = aws_subnet.public_0.id
-#   depends_on = [
-#     aws_internet_gateway.example
-#   ]
-# }
-# resource "aws_nat_gateway" "nat_gateway_1" {
-#   allocation_id = aws_eip.nat_gateway_1.id
-#   subnet_id     = aws_subnet.public_1.id
-#   depends_on = [
-#     aws_internet_gateway.example
-#   ]
-# }
+resource "aws_route" "private_0" {
+  route_table_id         = aws_route_table.private_0.id
+  nat_gateway_id         = aws_nat_gateway.nat_gateway_0.id
+  destination_cidr_block = "0.0.0.0/0"
+}
+resource "aws_route" "private_1" {
+  route_table_id         = aws_route_table.private_1.id
+  nat_gateway_id         = aws_nat_gateway.nat_gateway_1.id
+  destination_cidr_block = "0.0.0.0/0"
+}
+
+resource "aws_eip" "nat_gateway_0" {
+  vpc = true
+  depends_on = [
+    aws_internet_gateway.example
+  ]
+}
+resource "aws_eip" "nat_gateway_1" {
+  vpc = true
+  depends_on = [
+    aws_internet_gateway.example
+  ]
+}
+
+resource "aws_nat_gateway" "nat_gateway_0" {
+  allocation_id = aws_eip.nat_gateway_0.id
+  # Attention to setting public subnet in below
+  subnet_id = aws_subnet.public_0.id
+  depends_on = [
+    aws_internet_gateway.example
+  ]
+}
+resource "aws_nat_gateway" "nat_gateway_1" {
+  allocation_id = aws_eip.nat_gateway_1.id
+  subnet_id     = aws_subnet.public_1.id
+  depends_on = [
+    aws_internet_gateway.example
+  ]
+}
 
 #----------------
 # ALB, DNS
@@ -294,97 +302,97 @@ resource "aws_acm_certificate_validation" "example" {
 # VPC ENDPOINT
 #----------------
 
-module "private_link_sg" {
-  source      = "./security_group"
-  name        = "private-link-sg"
-  vpc_id      = aws_vpc.example.id
-  port        = 443
-  cidr_blocks = [aws_vpc.example.cidr_block]
-}
+# module "private_link_sg" {
+#   source      = "./security_group"
+#   name        = "private-link-sg"
+#   vpc_id      = aws_vpc.example.id
+#   port        = 443
+#   cidr_blocks = [aws_vpc.example.cidr_block]
+# }
 
-resource "aws_vpc_endpoint" "ecr_api" {
-  vpc_id              = aws_vpc.example.id
-  subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
-  service_name        = "com.amazonaws.ap-northeast-1.ecr.api"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
+# resource "aws_vpc_endpoint" "ecr_api" {
+#   vpc_id              = aws_vpc.example.id
+#   subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
+#   service_name        = "com.amazonaws.ap-northeast-1.ecr.api"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
 
-  security_group_ids = [module.private_link_sg.security_group_id]
+#   security_group_ids = [module.private_link_sg.security_group_id]
 
-  tags = {
-    Name = "ecr-api"
-  }
-}
+#   tags = {
+#     Name = "ecr-api"
+#   }
+# }
 
-resource "aws_vpc_endpoint" "ecr_dkr" {
-  vpc_id              = aws_vpc.example.id
-  subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
-  service_name        = "com.amazonaws.ap-northeast-1.ecr.dkr"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
+# resource "aws_vpc_endpoint" "ecr_dkr" {
+#   vpc_id              = aws_vpc.example.id
+#   subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
+#   service_name        = "com.amazonaws.ap-northeast-1.ecr.dkr"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
 
-  security_group_ids = [module.private_link_sg.security_group_id]
+#   security_group_ids = [module.private_link_sg.security_group_id]
 
-  tags = {
-    Name = "ecr-dkr"
-  }
-}
+#   tags = {
+#     Name = "ecr-dkr"
+#   }
+# }
 
-resource "aws_vpc_endpoint" "watch_logs" {
-  vpc_id              = aws_vpc.example.id
-  subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
-  service_name        = "com.amazonaws.ap-northeast-1.logs"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
+# resource "aws_vpc_endpoint" "watch_logs" {
+#   vpc_id              = aws_vpc.example.id
+#   subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
+#   service_name        = "com.amazonaws.ap-northeast-1.logs"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
 
-  security_group_ids = [module.private_link_sg.security_group_id]
+#   security_group_ids = [module.private_link_sg.security_group_id]
 
-  tags = {
-    Name = "watch-logs"
-  }
-}
+#   tags = {
+#     Name = "watch-logs"
+#   }
+# }
 
-resource "aws_vpc_endpoint" "ssm" {
-  vpc_id              = aws_vpc.example.id
-  subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
-  service_name        = "com.amazonaws.ap-northeast-1.ssm"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
+# resource "aws_vpc_endpoint" "ssm" {
+#   vpc_id              = aws_vpc.example.id
+#   subnet_ids          = [aws_subnet.private_0.id, aws_subnet.private_1.id]
+#   service_name        = "com.amazonaws.ap-northeast-1.ssm"
+#   vpc_endpoint_type   = "Interface"
+#   private_dns_enabled = true
 
-  security_group_ids = [module.private_link_sg.security_group_id]
+#   security_group_ids = [module.private_link_sg.security_group_id]
 
-  tags = {
-    Name = "ssm"
-  }
-}
+#   tags = {
+#     Name = "ssm"
+#   }
+# }
 
-resource "aws_vpc_endpoint" "s3_gateway" {
-  vpc_id            = aws_vpc.example.id
-  service_name      = "com.amazonaws.ap-northeast-1.s3"
-  vpc_endpoint_type = "Gateway"
+# resource "aws_vpc_endpoint" "s3_gateway" {
+#   vpc_id            = aws_vpc.example.id
+#   service_name      = "com.amazonaws.ap-northeast-1.s3"
+#   vpc_endpoint_type = "Gateway"
 
-  tags = {
-    Name = "s3-gateway"
-  }
+#   tags = {
+#     Name = "s3-gateway"
+#   }
 
-  route_table_ids = [aws_route_table.private_0.id, aws_route_table.private_1.id]
-}
+#   route_table_ids = [aws_route_table.private_0.id, aws_route_table.private_1.id]
+# }
 
-resource "aws_route_table" "private_0" {
-  vpc_id = aws_vpc.example.id
-}
+# resource "aws_route_table" "private_0" {
+#   vpc_id = aws_vpc.example.id
+# }
 
-resource "aws_route_table" "private_1" {
-  vpc_id = aws_vpc.example.id
-}
+# resource "aws_route_table" "private_1" {
+#   vpc_id = aws_vpc.example.id
+# }
 
-resource "aws_route_table_association" "s3_gateway_0" {
-  subnet_id      = aws_subnet.private_0.id
-  route_table_id = aws_route_table.private_0.id
-}
-resource "aws_route_table_association" "s3_gateway_1" {
-  subnet_id      = aws_subnet.private_1.id
-  route_table_id = aws_route_table.private_1.id
-}
+# resource "aws_route_table_association" "s3_gateway_0" {
+#   subnet_id      = aws_subnet.private_0.id
+#   route_table_id = aws_route_table.private_0.id
+# }
+# resource "aws_route_table_association" "s3_gateway_1" {
+#   subnet_id      = aws_subnet.private_1.id
+#   route_table_id = aws_route_table.private_1.id
+# }
 
 
