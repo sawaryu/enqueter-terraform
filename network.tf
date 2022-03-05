@@ -366,6 +366,8 @@ resource "aws_vpc_endpoint" "s3_gateway" {
   tags = {
     Name = "s3-gateway"
   }
+
+  route_table_ids = [aws_route_table.private_0.id, aws_route_table.private_1.id]
 }
 
 resource "aws_route_table" "private_0" {
@@ -376,13 +378,13 @@ resource "aws_route_table" "private_1" {
   vpc_id = aws_vpc.example.id
 }
 
-resource "aws_vpc_endpoint_route_table_association" "s3_gateway_0" {
-  vpc_endpoint_id = aws_vpc_endpoint.s3_gateway.id
-  route_table_id  = aws_route_table.private_0.id
+resource "aws_route_table_association" "s3_gateway_0" {
+  subnet_id      = aws_subnet.private_0.id
+  route_table_id = aws_route_table.private_0.id
 }
-resource "aws_vpc_endpoint_route_table_association" "s3_gateway_1" {
-  vpc_endpoint_id = aws_vpc_endpoint.s3_gateway.id
-  route_table_id  = aws_route_table.private_1.id
+resource "aws_route_table_association" "s3_gateway_1" {
+  subnet_id      = aws_subnet.private_1.id
+  route_table_id = aws_route_table.private_1.id
 }
 
 
