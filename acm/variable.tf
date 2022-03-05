@@ -1,0 +1,1 @@
+variable "front_domain_name" {}

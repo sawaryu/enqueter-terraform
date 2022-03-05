@@ -1,3 +1,3 @@
 variable "app_name" {}
-variable "domain" {}
+variable "front_domain_name" {}
 variable "acm_id" {}

@@ -6,15 +6,16 @@ locals {
   bucket_name  = var.app_name
   s3_origin_id = "S3-${var.app_name}"
 }
-resource "aws_s3_bucket" "this" {
-  bucket = local.bucket_name
+resource "aws_s3_bucket" "enqueter" {
+  bucket        = local.bucket_name
+  force_destroy = true
 }
-resource "aws_s3_bucket_policy" "this" {
-  bucket = aws_s3_bucket.this.id
+resource "aws_s3_bucket_policy" "enqueter" {
+  bucket = aws_s3_bucket.enqueter.id
   policy = data.template_file.s3_policy.rendered
 }
-resource "aws_s3_bucket_public_access_block" "this" {
-  bucket                  = aws_s3_bucket.this.id
+resource "aws_s3_bucket_public_access_block" "enqueter" {
+  bucket                  = aws_s3_bucket.enqueter.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -23,28 +24,28 @@ resource "aws_s3_bucket_public_access_block" "this" {
 data "template_file" "s3_policy" {
   template = file("./spa/s3_policy.json")
   vars = {
-    origin_access_identity = aws_cloudfront_origin_access_identity.this.id
+    origin_access_identity = aws_cloudfront_origin_access_identity.enqueter.id
     bucket_name            = local.bucket_name
   }
 }
-data "aws_route53_zone" "this" {
-  name         = var.domain
+data "aws_route53_zone" "enqueter" {
+  name         = var.front_domain_name
   private_zone = false
 }
 
 #----------------
 # CroudFront
 #----------------
-resource "aws_cloudfront_origin_access_identity" "this" {
+resource "aws_cloudfront_origin_access_identity" "enqueter" {
   comment = var.app_name
 }
-resource "aws_cloudfront_distribution" "this" {
-  aliases = [var.domain]
+resource "aws_cloudfront_distribution" "enqueter" {
+  aliases = [var.front_domain_name]
   origin {
-    domain_name = aws_s3_bucket.this.bucket_domain_name
+    domain_name = aws_s3_bucket.enqueter.bucket_domain_name
     origin_id   = local.s3_origin_id
     s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.this.cloudfront_access_identity_path
+      origin_access_identity = aws_cloudfront_origin_access_identity.enqueter.cloudfront_access_identity_path
     }
   }
   default_cache_behavior {
@@ -84,13 +85,13 @@ resource "aws_cloudfront_distribution" "this" {
   }
 }
 
-resource "aws_route53_record" "this" {
+resource "aws_route53_record" "enqueter" {
   type    = "A"
-  name    = var.domain
-  zone_id = data.aws_route53_zone.this.id
+  name    = var.front_domain_name
+  zone_id = data.aws_route53_zone.enqueter.id
   alias {
-    name                   = aws_cloudfront_distribution.this.domain_name
-    zone_id                = aws_cloudfront_distribution.this.hosted_zone_id
+    name                   = aws_cloudfront_distribution.enqueter.domain_name
+    zone_id                = aws_cloudfront_distribution.enqueter.hosted_zone_id
     evaluate_target_health = false
   }
 }
