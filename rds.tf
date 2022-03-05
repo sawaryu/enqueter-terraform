@@ -32,19 +32,19 @@ resource "aws_db_parameter_group" "example" {
   }
 }
 
-resource "aws_db_instance" "example" {
-  identifier                 = "example"
+resource "aws_db_instance" "enqueter" {
+  identifier                 = "enqueter"
   engine                     = "mysql"
   engine_version             = "5.7.25" # Need patch version
-  instance_class             = "db.t3.small"
+  instance_class             = "db.t3.micro"
   allocated_storage          = 20    # Default storage size
   max_allocated_storage      = 100   # Max scalable storage
   storage_type               = "gp2" # SSD
   storage_encrypted          = true
   kms_key_id                 = aws_kms_key.example.arn # Disk encryption (*arn)
-  name                       = "exampledb"
+  name                       = "enqueterdb"
   username                   = "admin"
-  password                   = "supremepassword!" # ** Must change after applying **
+  password                   = "superpassword" # ** Must change after applying **
   multi_az                   = true
   publicly_accessible        = false         # Disable access from out of VPC
   backup_window              = "09:10-09:40" # Backup schedule (* should set before maintenance_window)
