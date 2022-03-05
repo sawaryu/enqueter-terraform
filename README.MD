@@ -61,7 +61,7 @@ $ docker push 123456789123.dkr.ecr.ap-northeast-1.amazonaws.com/example:latest
 
 `RDS`
 ```
-# change identifier
+# change identifier after apply RDS
 $ aws rds modify-db-instance --db-instance-identifier "example" --master-user-password "super_secrete_identifier"
 ```
 

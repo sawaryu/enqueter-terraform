@@ -6,3 +6,4 @@ terraform.tfstate.backup
 .tfvars
 crash.log
 task_execute.sh
+private.md
