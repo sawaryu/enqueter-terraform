@@ -15,7 +15,7 @@ resource "aws_kms_alias" "example" {
 }
 
 #----------------
-# RDS, SSM
+# RDS
 #----------------
 resource "aws_db_parameter_group" "example" {
   name   = "example"
@@ -29,32 +29,6 @@ resource "aws_db_parameter_group" "example" {
   parameter {
     name  = "character_set_server"
     value = "utf8mb4"
-  }
-}
-resource "aws_db_subnet_group" "example" {
-  name       = "example"
-  subnet_ids = [aws_subnet.private_0.id, aws_subnet.private_1.id] # Multi AZ.
-}
-
-resource "aws_ssm_parameter" "db_username" {
-  name        = "/db/username"
-  value       = "admin"
-  type        = "String"
-  description = "db user name"
-}
-
-# * For secret value. you must need change the value after apply.
-resource "aws_ssm_parameter" "db_password" {
-  name        = "/db/password"
-  value       = "uninitialized"
-  type        = "SecureString"
-  description = "db password"
-
-  # Ignore changing value.
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
   }
 }
 
@@ -91,6 +65,11 @@ resource "aws_db_instance" "example" {
       password
     ]
   }
+}
+
+resource "aws_db_subnet_group" "example" {
+  name       = "example"
+  subnet_ids = [aws_subnet.private_0.id, aws_subnet.private_1.id] # Multi AZ.
 }
 
 module "mysql_sg" {

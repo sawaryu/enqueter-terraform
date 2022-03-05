@@ -87,5 +87,5 @@ In case of "terraform destroy", needing confirm setting.
 1. Delete NAT gateway
 2. Delete RDS
 3. Delete ALB
-3. Change Desired count of ECS service '0' 
-4. Make Enable CloudFront
+4. Delete Cloudwatch Event target
+5. Change Desired count of ECS service '0' 
