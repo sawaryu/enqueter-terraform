@@ -33,21 +33,21 @@ resource "aws_cloudwatch_event_rule" "batch" {
   schedule_expression = "rate(3 hours)"
 }
 
-# resource "aws_cloudwatch_event_target" "batch" {
-#   target_id = "batch"
-#   rule      = aws_cloudwatch_event_rule.batch.name
-#   role_arn  = module.ecs_events_role.iam_role_arn
-#   arn       = aws_ecs_cluster.api.arn
+resource "aws_cloudwatch_event_target" "batch" {
+  target_id = "batch"
+  rule      = aws_cloudwatch_event_rule.batch.name
+  role_arn  = module.ecs_events_role.iam_role_arn
+  arn       = aws_ecs_cluster.api.arn
 
-#   ecs_target {
-#     launch_type         = "FARGATE"
-#     task_count          = 1
-#     platform_version    = "1.4.0"
-#     task_definition_arn = aws_ecs_task_definition.batch.arn
+  ecs_target {
+    launch_type         = "FARGATE"
+    task_count          = 1
+    platform_version    = "1.4.0"
+    task_definition_arn = aws_ecs_task_definition.batch.arn
 
-#     network_configuration {
-#       assign_public_ip = "false"
-#       subnets          = [aws_subnet.private_0.id]
-#     }
-#   }
-# }
+    network_configuration {
+      assign_public_ip = "false"
+      subnets          = [aws_subnet.private_0.id]
+    }
+  }
+}
