@@ -66,13 +66,6 @@ resource "aws_subnet" "private_1" {
   map_public_ip_on_launch = false
 }
 
-resource "aws_route_table" "private_0" {
-  vpc_id = aws_vpc.example.id
-}
-resource "aws_route_table" "private_1" {
-  vpc_id = aws_vpc.example.id
-}
-
 #----------------
 # NAT
 #----------------
@@ -375,9 +368,21 @@ resource "aws_vpc_endpoint" "s3_gateway" {
   }
 }
 
-resource "aws_vpc_endpoint_route_table_association" "s3_gateway" {
+resource "aws_route_table" "private_0" {
+  vpc_id = aws_vpc.example.id
+}
+
+resource "aws_route_table" "private_1" {
+  vpc_id = aws_vpc.example.id
+}
+
+resource "aws_vpc_endpoint_route_table_association" "s3_gateway_0" {
   vpc_endpoint_id = aws_vpc_endpoint.s3_gateway.id
   route_table_id  = aws_route_table.private_0.id
+}
+resource "aws_vpc_endpoint_route_table_association" "s3_gateway_1" {
+  vpc_endpoint_id = aws_vpc_endpoint.s3_gateway.id
+  route_table_id  = aws_route_table.private_1.id
 }
 
 
