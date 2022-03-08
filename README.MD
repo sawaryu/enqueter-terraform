@@ -31,14 +31,14 @@ $ aws sts get-caller-identity --query Account --output text
 `SSM`
 ```bash
 # Create
-$ aws ssm put-parameter --name 'sample_name' --value 'hoge' --type String
+$ aws ssm put-parameter --name 'sample' --value 'hoge' --type String
 # Update
-$ aws ssm put-parameter --name 'sample_name' --type String --value 'hogehoge' --overwrite
+$ aws ssm put-parameter --name 'sample' --type String --value 'hogehoge' --overwrite
 # Read
-$ aws ssm get-parameter --output text --name 'sample_name' --query Parameter.Value
+$ aws ssm get-parameter --output text --name 'sample' --query Parameter.Value
 # Delete
-$ aws ssm delete-parameter --name "sample_name"
-# Read as list
+$ aws ssm delete-parameter --name "sample"
+# Read as list (* Attention to dir levels)
 $ aws ssm get-parameters-by-path --path "/"
 ```
 
@@ -65,33 +65,14 @@ $ docker push 123456789123.dkr.ecr.ap-northeast-1.amazonaws.com/example:latest
 $ aws rds modify-db-instance --db-instance-identifier "example" --master-user-password "super_secrete_identifier"
 ```
 
-## Attention
-
-1. VPC default root is out of terraform operation.
-2. Route53 domains life time is one year.
-3. Before Destroy RDS
-* `deletion_protection` to `false`
-* `skip_final_snapshot` to `true`
-* `terraform apply destroy`
-
 ## Deletion Protection Resources
 
-In case of "terraform destroy", needing confirm setting.
+1. RDS
+* `deletion_protection` to `false`
+* `skip_final_snapshot` to `true`
 
-1. ALB
-2. RDB
-3. S3 (* `force_destroy = true`)
+2. ALB
+* `deletion_protection` to `false`
 
-## Stop Application temporally
-
-1. Delete NAT gateway
-2. Delete RDS
-3. Delete ALB
-4. Delete Cloudwatch Event target
-5. Change Desired count of ECS service '0' 
-
-```
-ResourceInitializationError: unable to pull secrets or registry auth: execution resource retrieval failed: unable to retrieve secrets from ssm: service call has been retried 5 time(s): RequestCanceled: request context canceled caused by: context deadli...
-
-CannotPullContainerError: ref pull has been retried 5 time(s): failed to copy: httpReadSeeker: failed open: failed to do request: Get https://prod-ap-northeast-1-starport-layer-bucket.s3.ap-northeast-1.amazonaws.com/88749b-132180986458-7abe730d-4157-9a...
-```
+3. S3
+* `force_destroy = true`
