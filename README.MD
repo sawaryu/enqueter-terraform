@@ -67,6 +67,8 @@ $ aws rds modify-db-instance --db-instance-identifier "example" --master-user-pa
 
 ## Deletion Protection Resources
 
+You need to change setting before destroy protection-resources.
+
 1. RDS
 * `deletion_protection` to `false`
 * `skip_final_snapshot` to `true`
