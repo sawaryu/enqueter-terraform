@@ -50,13 +50,13 @@ $ aws logs filter-log-events --log-group-name /ecs/example
 `ECR`
 ```
 # login
-$ aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 123456789123.dkr.ecr.ap-northeast-1.amazonaws.com  
+$ aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin {account_id}.dkr.ecr.ap-northeast-1.amazonaws.com  
 
 # build
-$ docker build -t 123456789123.dkr.ecr.ap-northeast-1.amazonaws.com/example:latest .
+$ docker build --no-cache -t {account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/example:latest .
 
 # push
-$ docker push 123456789123.dkr.ecr.ap-northeast-1.amazonaws.com/example:latest
+$ docker push {account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/example:latest
 ```
 
 `RDS`
