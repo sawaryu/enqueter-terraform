@@ -1,16 +1,19 @@
 # Enqueter Terraform
 
-Infrastructure by terraform
+## Overview
+
+AWS infrastructure by terraform.
 
 ## AWS CLI setup
-<u>1. Install latest one</u>
+
+`Install latest one`
 ```
 $ curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
 $ sudo installer -pkg AWSCLIV2.pkg -target /
 ```
 
 
-<u>2. aws configure</u>
+`aws configure`
 ```
 $ aws configure
 AWS Access Key ID [None]: *access_key_id
